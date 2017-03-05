@@ -1,4 +1,4 @@
 threejs-cookbook
 ================
 
-Examples for the Three.js Cookbook book I'm writing for Packt
+Examples for the Three.js Cookbook written by Jos Dirksen
