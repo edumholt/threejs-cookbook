@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>01.01 - WebGLRenderer - Skeleton</title>
+  <script src="../libs/three.js"></script>
+  <script src="../libs/stats.min.js"></script>
+  <script src="../libs/dat.gui.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+
+    // global variables
+    var renderer;
+    var scene;
+    var camera;
+    var stats;
+    var control;
+    
+    function init() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setClearColor(0x000000, 1.0);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // create a cube and add to scene
+      let cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
+      let cubeMaterial = new THREE.MeshNormalMaterial();
+      let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+      cube.name = 'cube';
+      scene.add(cube);
+
+      // position and point the camera to the center of the scene
+      camera.position.x = 15;
+      camera.position.y = 16;
+      camera.position.z = 13;
+      camera.lookAt(scene.position);
+
+      document.body.appendChild(renderer.domElement);
+
+      stats = createStats();
+      document.body.appendChild(stats.domElement);
+
+      control = new function() {
+        this.rotationSpeedX = 0.0001;
+        this.rotationSpeedY = 0.0001;
+        this.rotationSpeedZ = 0.0001;
+      }
+
+      addControls(control);
+      setupKeyControls();
+      render();
+    }
+
+    function render() {
+      renderer.render(scene, camera);
+      let cube = scene.getObjectByName('cube');
+      cube.rotation.x += control.rotationSpeedX;
+      cube.rotation.y += control.rotationSpeedY;
+      cube.rotation.z += control.rotationSpeedZ;
+      
+      requestAnimationFrame(render);
+      stats.update();
+    }
+
+    function createStats() {
+      let stats = new Stats();
+      stats.setMode(0);
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.left = '0';
+      stats.domElement.style.top = '0';
+      return stats;
+    }
+
+    function addControls(controlObject) {
+      let gui = new dat.GUI();
+      gui.add(controlObject, 'rotationSpeedX', -0.02, 0.02);
+      gui.add(controlObject, 'rotationSpeedY', -0.02, 0.02);
+      gui.add(controlObject, 'rotationSpeedZ', -0.02, 0.02);
+    }
+
+    function setupKeyControls() {
+      let cube = scene.getObjectByName('cube');
+      document.onkeydown = function(e) {
+        switch(e.keyCode) {
+          case 37:
+          cube.rotation.x += .1;
+          break;
+          case 38:
+          cube.rotation.z -= .1;
+          break;
+          case 39:
+          cube.rotation.x -= .1;
+          break;
+          case 40:
+          cube.rotation.z -= .1
+          break;
+        }
+      }
+    }
+
+    // calls the init function when the window is done loading.
+    window.onload = init;
+</script>
+
+</body>
+
+</html>
